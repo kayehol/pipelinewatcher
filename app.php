@@ -5,6 +5,8 @@ include __DIR__.'/vendor/autoload.php';
 use Discord\Builders\MessageBuilder;
 use Discord\Discord;
 use Discord\Parts\Channel\Message;
+use Discord\Parts\Channel\Channel;
+use Discord\Parts\Guild\Guild;
 use Discord\WebSockets\Event;
 
 $env = parse_ini_file('.env');
@@ -16,15 +18,22 @@ $discord = new Discord([
 
 $discord->on('ready', function(Discord $discord){
     echo "Watching...\n";
-    $successGifs = ['success1', 'success2'];
+    $successGifs = ['success1', 'success2', 'success3'];
     $successMsgs = ['Aí sim', 'Boa', 'Show'];
-    $failGifs = [];
+    $failGifs = ['fail1','fail2','fail3','fail4','fail5'];
     $failMsgs = ['Vish...','Xiii', 'Ihh...','Lascou'];
     
+    $discord->on(Event::WEBHOOKS_UPDATE, function (Guild $guild, Discord $discord, Channel $channel) {
+        var_dump($guild);
+        var_dump($channel);
+    });
+
     $discord->on(Event::MESSAGE_CREATE, function(Message $message, Discord $discord) use ($successGifs, $successMsgs, $failGifs, $failMsgs){
         if ($message->author->id === $discord->id) return;
+        if (!$message->embeds) return;
 
-        $content = $message->content;
+        $content = $message->embeds[0]->description;
+
         if (str_contains($content, 'has failed')) {
             $message->channel->sendMessage(MessageBuilder::new()
                 ->setContent($failMsgs[array_rand($failMsgs)])

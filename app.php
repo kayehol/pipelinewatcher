@@ -22,11 +22,6 @@ $discord->on('ready', function(Discord $discord){
     $successMsgs = ['Aí sim', 'Boa', 'Show'];
     $failGifs = ['fail1','fail2','fail3','fail4','fail5'];
     $failMsgs = ['Vish...','Xiii', 'Ihh...','Lascou'];
-    
-    $discord->on(Event::WEBHOOKS_UPDATE, function (Guild $guild, Discord $discord, Channel $channel) {
-        var_dump($guild);
-        var_dump($channel);
-    });
 
     $discord->on(Event::MESSAGE_CREATE, function(Message $message, Discord $discord) use ($successGifs, $successMsgs, $failGifs, $failMsgs){
         if ($message->author->id === $discord->id) return;

@@ -25,7 +25,7 @@ $discord->on('ready', function(Discord $discord){
 
     $discord->on(Event::MESSAGE_CREATE, function(Message $message, Discord $discord) use ($successGifs, $successMsgs, $failGifs, $failMsgs){
         if ($message->author->id === $discord->id) return;
-        if (!$message->embeds) return;
+        if (!$message->embeds[0]) return;
 
         $content = $message->embeds[0]->description;
 
